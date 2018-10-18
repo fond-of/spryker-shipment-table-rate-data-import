@@ -8,7 +8,7 @@ use Spryker\Zed\DataImport\Dependency\Plugin\DataImportPluginInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
- * @method \FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\ShipmentTableRateDataImportFacadeInterface getFacade()
+ * @method \Spryker\Zed\CategoryDataImport\Business\CategoryDataImportFacadeInterface getFacade()
  */
 class ShipmentTableRateDataImportPlugin extends AbstractPlugin implements DataImportPluginInterface
 {

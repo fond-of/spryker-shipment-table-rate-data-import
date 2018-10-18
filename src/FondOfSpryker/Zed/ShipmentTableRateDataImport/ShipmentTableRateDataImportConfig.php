@@ -13,24 +13,7 @@ class ShipmentTableRateDataImportConfig extends DataImportConfig
      */
     public function getShipmentTableRateDataImporterConfiguration()
     {
-        $moduleDataImportDirectory = $this->getModuleRoot() . 'data' . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
-
-        return $this->buildImporterConfiguration($moduleDataImportDirectory . 'shipment_table_rate.csv', static::IMPORT_TYPE_SHIPMENT_TABLE_RATE);
+        return $this->buildImporterConfiguration( 'shipment_table_rate.csv', static::IMPORT_TYPE_SHIPMENT_TABLE_RATE);
     }
 
-    /**
-     * @return string
-     */
-    protected function getModuleRoot(): string
-    {
-        $moduleRoot = realpath(
-            __DIR__
-            . DIRECTORY_SEPARATOR . '..'
-            . DIRECTORY_SEPARATOR . '..'
-            . DIRECTORY_SEPARATOR . '..'
-            . DIRECTORY_SEPARATOR . '..'
-        );
-
-        return $moduleRoot . DIRECTORY_SEPARATOR;
-    }
 }
