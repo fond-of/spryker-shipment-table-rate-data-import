@@ -3,12 +3,12 @@
 namespace FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model;
 
 use Exception;
+use Orm\Zed\Country\Persistence\SpyCountryQuery;
 use Orm\Zed\ShipmentTableRate\Persistence\FondOfSprykerShipmentTableRate;
-use Orm\Zed\Category\Persistence\FondOfSprykerShipmentTableRateCategoryQuery;
 use FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model\Reader\ShipmentTableRateReaderInterface;
-use Spryker\Zed\DataImport\Business\Model\DataImportStep\AddLocalesStep;
+use Orm\Zed\ShipmentTableRate\Persistence\FosShipmentTableRateQuery;
+use Orm\Zed\Store\Persistence\SpyStoreQuery;
 use Spryker\Zed\DataImport\Business\Model\DataImportStep\DataImportStepInterface;
-use Spryker\Zed\DataImport\Business\Model\DataImportStep\LocalizedAttributesExtractorStep;
 use Spryker\Zed\DataImport\Business\Model\DataImportStep\PublishAwareStep;
 use Spryker\Zed\DataImport\Business\Model\DataSet\DataSetInterface;
 
@@ -19,26 +19,21 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
 {
     const BULK_SIZE = 100;
 
-    const KEY_NAME = 'name';
-    const KEY_META_TITLE = 'meta_title';
-    const KEY_META_DESCRIPTION = 'meta_description';
-    const KEY_META_KEYWORDS = 'meta_keywords';
-    const KEY_CATEGORY_KEY = 'category_key';
-    const KEY_PARENT_CATEGORY_KEY = 'parent_category_key';
-    const KEY_TEMPLATE_NAME = 'template_name';
+    const COL_COUNTRY = 'country';
+    const COL_STORE = 'store';
+
+    const KEY_FK_COUNTRY = 'fk_country';
+    const KEY_FK_STORE = 'fk_store';
 
     /**
-     * @var \FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model\Reader\ShipmentTableReaderInterface
+     * @var int[] Keys are country iso2 codes, values are country ids.
      */
-    protected $shipmentTableRateReader;
+    protected static $countryIdsCache = [];
 
     /**
-     * @param \FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model\Reader\ShipmentTableRateReaderInterface $shipmentTableRateReader
+     * @var int[] Keys are store name, values are store ids.
      */
-    public function __construct(ShipmentTableRateReaderInterface $shipmentTableRateReader)
-    {
-        $this->shipmentTableRateReader = $shipmentTableRateReader;
-    }
+    protected static $storeIdsCache = [];
 
     /**
      * @param \Spryker\Zed\DataImport\Business\Model\DataSet\DataSetInterface $dataSet
@@ -48,17 +43,62 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
     public function execute(DataSetInterface $dataSet)
     {
         $shipmentTableRateEntity = $this->findOrCreateShipmentTableRate($dataSet);
-
-        $this->shipmentTableRateReader->addShipmentTableRate($shipmentTableRateEntity);
     }
 
     /**
      * @param \Spryker\Zed\DataImport\Business\Model\DataSet\DataSetInterface $dataSet
      *
-     * @return \Orm\Zed\Category\Persistence\SpyCategory
+     * @return \Orm\Zed\ShipmentTableRate\Persistence\FosShipmentTableRate
      */
     protected function findOrCreateShipmentTableRate(DataSetInterface $dataSet)
     {
 
+        $dataSet[static::KEY_FK_COUNTRY] = $this->getCountryIdByIso2Code($dataSet[static::COL_COUNTRY]);
+        $dataSet[static::KEY_FK_STORE] = $this->getStoreIdByName($dataSet[static::COL_STORE]);
+
+        $shipmentTableRateEntity = FosShipmentTableRateQuery::create()
+            ->filterByFkCountry($dataSet[static::KEY_FK_COUNTRY])
+            ->filterByFkStore($dataSet[static::KEY_FK_STORE])
+            ->findOneOrCreate();
+
+        $shipmentTableRateEntity->fromArray($dataSet->getArrayCopy());
+
+        if ($shipmentTableRateEntity->isNew() || $shipmentTableRateEntity->isModified()) {
+            $shipmentTableRateEntity->save();
+        }
+
+        return $shipmentTableRateEntity;
+    }
+
+    /**
+     * @param string $countryIso2Code
+     *
+     * @return int
+     */
+    protected function getCountryIdByIso2Code($countryIso2Code): int
+    {
+        if (!isset(static::$countryIdsCache[$countryIso2Code])) {
+            static::$countryIdsCache[$countryIso2Code] = SpyCountryQuery::create()
+                ->findOneByIso2Code($countryIso2Code)
+                ->getIdCountry();
+        }
+
+        return static::$countryIdsCache[$countryIso2Code];
+    }
+
+    /**
+     * @param string $countryIso2Code
+     *
+     * @return int
+     */
+    protected function getStoreIdByName($name): int
+    {
+        if (!isset(static::$storeIdsCache[$name])) {
+            static::$storeIdsCache[$name] = SpyStoreQuery::create()
+                ->findOneByName($name)
+                ->getIdStore();
+        }
+
+        return static::$storeIdsCache[$name];
     }
 }

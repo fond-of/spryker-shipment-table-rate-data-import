@@ -9,7 +9,7 @@ interface ShipmentTableRateDataImportFacadeInterface
 {
     /**
      * Specification:
-     * - Imports category data.
+     * - Imports Shipment Table Rate data.
      *
      * @api
      *

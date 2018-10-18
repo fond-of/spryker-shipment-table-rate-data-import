@@ -11,7 +11,7 @@ class ShipmentTableRateDataImportConfig extends DataImportConfig
     /**
      * @return \Generated\Shared\Transfer\DataImporterConfigurationTransfer
      */
-    public function getCategoryDataImporterConfiguration()
+    public function getShipmentTableRateDataImporterConfiguration()
     {
         $moduleDataImportDirectory = $this->getModuleRoot() . 'data' . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
 
