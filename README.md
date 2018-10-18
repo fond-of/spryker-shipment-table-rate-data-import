@@ -1,0 +1,1 @@
+# spryker-shipment-table-rate-data-import
