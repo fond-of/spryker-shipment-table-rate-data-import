@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\ShipmentTableRateDataImport\Business;
 
+use FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\ShipmentTableRateDataImportFacadeInterface;
 use Generated\Shared\Transfer\DataImporterConfigurationTransfer;
 use Generated\Shared\Transfer\DataImporterReportTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;

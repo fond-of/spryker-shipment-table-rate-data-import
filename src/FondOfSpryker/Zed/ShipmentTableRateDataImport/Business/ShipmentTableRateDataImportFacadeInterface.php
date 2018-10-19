@@ -1,6 +1,6 @@
 <?php
 
-namespace Spryker\Zed\ShipmenTableRateDataImport\Business;
+namespace FondOfSpryker\Zed\ShipmentTableRateDataImport\Business;
 
 use Generated\Shared\Transfer\DataImporterConfigurationTransfer;
 use Generated\Shared\Transfer\DataImporterReportTransfer;

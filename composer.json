@@ -22,6 +22,7 @@
   ],
   "require": {
     "php": ">=7.1",
+    "fond-of-spryker/shipment-table-rate": "^1.0.0"
     "spryker/data-import": "^1.3.0",
     "spryker/kernel": "^3.0.0",
     "spryker/propel-orm": "^1.0.0",
