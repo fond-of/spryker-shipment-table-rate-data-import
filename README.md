@@ -11,3 +11,34 @@ This extension makes it possible import the shipping table rates
 ```
 composer require fond-of-spryker/shipment-table-rate-data-import
 ```
+
+## 1. Add Data Importer Plugin in  Pyz\Zed\DataImport\DataImportDependencyProvider
+
+```
+ /**
+     * @return array
+     */
+    protected function getDataImporterPlugins(): array
+    {
+        return [
+            [new ShipmentTableRateDataImportPlugin(), DataImportConfig::IMPORT_TYPE_SHIPMENT_TABLE_RATE]
+            ........
+        ];
+    }
+     
+```
+
+## 2. Add Import type constant in  Pyz\Zed\DataImport\DataImportConfig
+
+```
+ const IMPORT_TYPE_SHIPMENT_TABLE_RATE = 'shipment-table-rate';
+     
+```
+
+## 3. Create data import file 
+
+```
+ shipment_table_rate.csv
+     
+```
+
