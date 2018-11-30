@@ -39,6 +39,10 @@ composer require fond-of-spryker/shipment-table-rate-data-import
 
 ```
  shipment_table_rate.csv
-     
+ 
+ Example: 
+ free_threshold,price,country,store,postcode
+ 100,2000,US,STORE_US,XXXXX    
+ 100,2500,US,STORE_US,X*    
 ```
 
