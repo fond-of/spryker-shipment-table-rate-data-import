@@ -20,8 +20,8 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
     const BULK_SIZE = 100;
 
     const COL_COUNTRY = 'country';
+    const COL_PRICE = 'price';
     const COL_STORE = 'store';
-    const COL_FREE_THRESHOLD = 'free_threshold';
     const COL_ZIP_CODE = 'zip_code';
 
     const KEY_FK_COUNTRY = 'fk_country';
@@ -55,14 +55,15 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
     protected function findOrCreateShipmentTableRate(DataSetInterface $dataSet)
     {
 
+
         $dataSet[static::KEY_FK_COUNTRY] = $this->getCountryIdByIso2Code($dataSet[static::COL_COUNTRY]);
         $dataSet[static::KEY_FK_STORE] = $this->getStoreIdByName($dataSet[static::COL_STORE]);
-        $dataSet[static::COL_FREE_THRESHOLD] = ($dataSet[static::COL_FREE_THRESHOLD]) ? $dataSet[static::COL_FREE_THRESHOLD] : NULL;
 
         $shipmentTableRateEntity = FosShipmentTableRateQuery::create()
             ->filterByFkCountry($dataSet[static::KEY_FK_COUNTRY])
             ->filterByFkStore($dataSet[static::KEY_FK_STORE])
             ->filterByZipCode($dataSet[static::COL_ZIP_CODE])
+            ->filterByPrice($dataSet[static::COL_PRICE])
             ->findOneOrCreate();
 
         $shipmentTableRateEntity->fromArray($dataSet->getArrayCopy());
