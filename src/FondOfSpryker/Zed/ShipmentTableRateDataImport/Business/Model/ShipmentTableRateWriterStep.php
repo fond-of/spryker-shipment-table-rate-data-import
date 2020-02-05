@@ -4,8 +4,6 @@ namespace FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model;
 
 use Exception;
 use Orm\Zed\Country\Persistence\SpyCountryQuery;
-use Orm\Zed\ShipmentTableRate\Persistence\FondOfSprykerShipmentTableRate;
-use FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model\Reader\ShipmentTableRateReaderInterface;
 use Orm\Zed\ShipmentTableRate\Persistence\FosShipmentTableRateQuery;
 use Orm\Zed\Store\Persistence\SpyStoreQuery;
 use Spryker\Zed\DataImport\Business\Model\DataImportStep\DataImportStepInterface;
@@ -17,15 +15,15 @@ use Spryker\Zed\DataImport\Business\Model\DataSet\DataSetInterface;
  */
 class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImportStepInterface
 {
-    const BULK_SIZE = 100;
+    public const BULK_SIZE = 100;
 
-    const COL_COUNTRY = 'country';
-    const COL_PRICE = 'price';
-    const COL_STORE = 'store';
-    const COL_ZIP_CODE = 'zip_code';
+    public const COL_COUNTRY = 'country';
+    public const COL_PRICE = 'price';
+    public const COL_STORE = 'store';
+    public const COL_ZIP_CODE = 'zip_code';
 
-    const KEY_FK_COUNTRY = 'fk_country';
-    const KEY_FK_STORE = 'fk_store';
+    public const KEY_FK_COUNTRY = 'fk_country';
+    public const KEY_FK_STORE = 'fk_store';
 
     /**
      * @var int[] Keys are country iso2 codes, values are country ids.
@@ -54,8 +52,6 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
      */
     protected function findOrCreateShipmentTableRate(DataSetInterface $dataSet)
     {
-
-
         $dataSet[static::KEY_FK_COUNTRY] = $this->getCountryIdByIso2Code($dataSet[static::COL_COUNTRY]);
         $dataSet[static::KEY_FK_STORE] = $this->getStoreIdByName($dataSet[static::COL_STORE]);
 
@@ -71,10 +67,10 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
         if ($shipmentTableRateEntity->isNew() || $shipmentTableRateEntity->isModified()) {
             try {
                 $shipmentTableRateEntity->save();
-            }catch (Exception $e) {
-                print $e->getMessage(); exit();
+            } catch (Exception $e) {
+                print $e->getMessage();
+                exit();
             }
-
         }
 
         return $shipmentTableRateEntity;

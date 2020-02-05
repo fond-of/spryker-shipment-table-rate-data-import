@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Zed\ShipmentTableRateDataImport\Business;
 
-use FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model\Reader\ShipmentTableRateReader;
 use FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model\ShipmentTableRateWriterStep;
 use Spryker\Zed\DataImport\Business\DataImportBusinessFactory;
 
