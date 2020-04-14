@@ -19,4 +19,5 @@ class ShipmentTableRateDataImportConfig extends DataImportConfig
             static::IMPORT_TYPE_SHIPMENT_TABLE_RATE
         );
     }
+
 }

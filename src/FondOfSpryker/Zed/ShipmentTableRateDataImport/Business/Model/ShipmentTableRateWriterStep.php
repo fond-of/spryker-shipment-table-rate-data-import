@@ -60,6 +60,7 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
             ->filterByFkCountry($dataSet[static::KEY_FK_COUNTRY])
             ->filterByFkStore($dataSet[static::KEY_FK_STORE])
             ->filterByZipCode($dataSet[static::COL_ZIP_CODE])
+            ->filterByPrice($dataSet[static::COL_PRICE])
             ->findOneOrCreate();
 
         $shipmentTableRateEntity->fromArray($dataSet->getArrayCopy());
