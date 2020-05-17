@@ -21,6 +21,7 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
     public const COL_STORE = 'store';
     public const COL_FREE_THRESHOLD = 'free_threshold';
     public const COL_ZIP_CODE = 'zip_code';
+    public const COL_PRICE = 'zip_code';
 
     public const KEY_FK_COUNTRY = 'fk_country';
     public const KEY_FK_STORE = 'fk_store';
@@ -82,7 +83,7 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
      *
      * @return int
      */
-    protected function getCountryIdByIso2Code($countryIso2Code): int
+    protected function getCountryIdByIso2Code(string $countryIso2Code): int
     {
         if (!isset(static::$countryIdsCache[$countryIso2Code])) {
             static::$countryIdsCache[$countryIso2Code] = SpyCountryQuery::create()
@@ -94,11 +95,11 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
     }
 
     /**
-     * @param string $countryIso2Code
+     * @param string $name
      *
      * @return int
      */
-    protected function getStoreIdByName($name): int
+    protected function getStoreIdByName(string $name): int
     {
         if (!isset(static::$storeIdsCache[$name])) {
             static::$storeIdsCache[$name] = SpyStoreQuery::create()
