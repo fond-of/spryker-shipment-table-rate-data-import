@@ -22,7 +22,6 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
     public const COL_PRICE = 'price';
     public const COL_COST = 'cost';
     public const COL_ZIP_CODE = 'zip_code';
-    public const COL_PRICE = 'zip_code';
 
     public const KEY_FK_COUNTRY = 'fk_country';
     public const KEY_FK_STORE = 'fk_store';
