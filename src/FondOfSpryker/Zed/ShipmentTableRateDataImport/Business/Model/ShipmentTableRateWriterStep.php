@@ -19,9 +19,9 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
 
     public const COL_COUNTRY = 'country';
     public const COL_STORE = 'store';
+    public const COL_MIN_PRICE_TO_PAY = 'min_price_to_pay';
     public const COL_PRICE = 'price';
-    public const COL_COST = 'cost';
-    public const COL_ZIP_CODE = 'zip_code';
+    public const COL_ZIP_CODE_PATTERN = 'zip_code_pattern';
 
     public const KEY_FK_COUNTRY = 'fk_country';
     public const KEY_FK_STORE = 'fk_store';
@@ -55,15 +55,15 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
     {
         $dataSet[static::KEY_FK_COUNTRY] = $this->getCountryIdByIso2Code($dataSet[static::COL_COUNTRY]);
         $dataSet[static::KEY_FK_STORE] = $this->getStoreIdByName($dataSet[static::COL_STORE]);
+        $dataSet[static::COL_MIN_PRICE_TO_PAY] = $dataSet[static::COL_MIN_PRICE_TO_PAY] ?? 0;
         $dataSet[static::COL_PRICE] = $dataSet[static::COL_PRICE] ?? 0;
-        $dataSet[static::COL_COST] = $dataSet[static::COL_COST] ?? 0;
 
         $shipmentTableRateEntity = FosShipmentTableRateQuery::create()
             ->filterByFkCountry($dataSet[static::KEY_FK_COUNTRY])
             ->filterByFkStore($dataSet[static::KEY_FK_STORE])
-            ->filterByZipCode($dataSet[static::COL_ZIP_CODE])
+            ->filterByZipCodePattern($dataSet[static::COL_ZIP_CODE_PATTERN])
+            ->filterByMinPriceToPay($dataSet[static::COL_MIN_PRICE_TO_PAY])
             ->filterByPrice($dataSet[static::COL_PRICE])
-            ->filterByCost($dataSet[static::COL_COST])
             ->findOneOrCreate();
 
         $shipmentTableRateEntity->fromArray($dataSet->getArrayCopy());
