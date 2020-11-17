@@ -2,13 +2,14 @@
 
 namespace FondOfSpryker\Zed\ShipmentTableRateDataImport\Communication\Plugin;
 
-use Generated\Shared\Transfer\DataImporterConfigurationTransfer;
 use FondOfSpryker\Zed\ShipmentTableRateDataImport\ShipmentTableRateDataImportConfig;
+use Generated\Shared\Transfer\DataImporterConfigurationTransfer;
 use Spryker\Zed\DataImport\Dependency\Plugin\DataImportPluginInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
  * @method \Spryker\Zed\CategoryDataImport\Business\CategoryDataImportFacadeInterface getFacade()
+ * @method \FondOfSpryker\Zed\ShipmentTableRateDataImport\ShipmentTableRateDataImportConfig getConfig()
  */
 class ShipmentTableRateDataImportPlugin extends AbstractPlugin implements DataImportPluginInterface
 {

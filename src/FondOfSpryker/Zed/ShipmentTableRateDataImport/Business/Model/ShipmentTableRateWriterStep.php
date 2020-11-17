@@ -4,8 +4,6 @@ namespace FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model;
 
 use Exception;
 use Orm\Zed\Country\Persistence\SpyCountryQuery;
-use Orm\Zed\ShipmentTableRate\Persistence\FondOfSprykerShipmentTableRate;
-use FondOfSpryker\Zed\ShipmentTableRateDataImport\Business\Model\Reader\ShipmentTableRateReaderInterface;
 use Orm\Zed\ShipmentTableRate\Persistence\FosShipmentTableRateQuery;
 use Orm\Zed\Store\Persistence\SpyStoreQuery;
 use Spryker\Zed\DataImport\Business\Model\DataImportStep\DataImportStepInterface;
@@ -17,15 +15,16 @@ use Spryker\Zed\DataImport\Business\Model\DataSet\DataSetInterface;
  */
 class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImportStepInterface
 {
-    const BULK_SIZE = 100;
+    public const BULK_SIZE = 100;
 
-    const COL_COUNTRY = 'country';
-    const COL_PRICE = 'price';
-    const COL_STORE = 'store';
-    const COL_ZIP_CODE = 'zip_code';
+    public const COL_COUNTRY = 'country';
+    public const COL_STORE = 'store';
+    public const COL_MIN_PRICE_TO_PAY = 'min_price_to_pay';
+    public const COL_PRICE = 'price';
+    public const COL_ZIP_CODE_PATTERN = 'zip_code_pattern';
 
-    const KEY_FK_COUNTRY = 'fk_country';
-    const KEY_FK_STORE = 'fk_store';
+    public const KEY_FK_COUNTRY = 'fk_country';
+    public const KEY_FK_STORE = 'fk_store';
 
     /**
      * @var int[] Keys are country iso2 codes, values are country ids.
@@ -44,7 +43,7 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
      */
     public function execute(DataSetInterface $dataSet)
     {
-        $shipmentTableRateEntity = $this->findOrCreateShipmentTableRate($dataSet);
+        $this->findOrCreateShipmentTableRate($dataSet);
     }
 
     /**
@@ -54,15 +53,16 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
      */
     protected function findOrCreateShipmentTableRate(DataSetInterface $dataSet)
     {
-
-
         $dataSet[static::KEY_FK_COUNTRY] = $this->getCountryIdByIso2Code($dataSet[static::COL_COUNTRY]);
         $dataSet[static::KEY_FK_STORE] = $this->getStoreIdByName($dataSet[static::COL_STORE]);
+        $dataSet[static::COL_MIN_PRICE_TO_PAY] = $dataSet[static::COL_MIN_PRICE_TO_PAY] ?? 0;
+        $dataSet[static::COL_PRICE] = $dataSet[static::COL_PRICE] ?? 0;
 
         $shipmentTableRateEntity = FosShipmentTableRateQuery::create()
             ->filterByFkCountry($dataSet[static::KEY_FK_COUNTRY])
             ->filterByFkStore($dataSet[static::KEY_FK_STORE])
-            ->filterByZipCode($dataSet[static::COL_ZIP_CODE])
+            ->filterByZipCodePattern($dataSet[static::COL_ZIP_CODE_PATTERN])
+            ->filterByMinPriceToPay($dataSet[static::COL_MIN_PRICE_TO_PAY])
             ->filterByPrice($dataSet[static::COL_PRICE])
             ->findOneOrCreate();
 
@@ -71,10 +71,10 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
         if ($shipmentTableRateEntity->isNew() || $shipmentTableRateEntity->isModified()) {
             try {
                 $shipmentTableRateEntity->save();
-            }catch (Exception $e) {
-                print $e->getMessage(); exit();
+            } catch (Exception $e) {
+                print $e->getMessage();
+                exit();
             }
-
         }
 
         return $shipmentTableRateEntity;
@@ -85,7 +85,7 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
      *
      * @return int
      */
-    protected function getCountryIdByIso2Code($countryIso2Code): int
+    protected function getCountryIdByIso2Code(string $countryIso2Code): int
     {
         if (!isset(static::$countryIdsCache[$countryIso2Code])) {
             static::$countryIdsCache[$countryIso2Code] = SpyCountryQuery::create()
@@ -97,11 +97,11 @@ class ShipmentTableRateWriterStep extends PublishAwareStep implements DataImport
     }
 
     /**
-     * @param string $countryIso2Code
+     * @param string $name
      *
      * @return int
      */
-    protected function getStoreIdByName($name): int
+    protected function getStoreIdByName(string $name): int
     {
         if (!isset(static::$storeIdsCache[$name])) {
             static::$storeIdsCache[$name] = SpyStoreQuery::create()
